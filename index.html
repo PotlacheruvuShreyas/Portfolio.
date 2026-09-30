@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shreyas Potlacheruvu | Frontend Developer</title>
+  <meta name="description" content="Portfolio of a web development student building responsive websites with HTML, CSS and Tailwind CSS." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN; custom colours and fonts are set here instead of :root -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            space: '#07061a',
+            panel: '#12102e',
+            nebula: '#a78bfa',
+            pulsar: '#f472b6',
+            ion: '#22d3ee',
+          },
+          fontFamily: {
+            display: ['Unbounded', 'sans-serif'],
+            body: ['Figtree', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Custom CSS for the galaxy theme.
+   Tailwind handles layout, spacing and colours; this file handles what
+   utilities can't: the starfield, keyframe animations and small fixes.
+   No :root or CSS variables are used anywhere. */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* keeps section titles clear of the sticky navbar */
+}
+
+/* Deep-space background with two soft nebula glows */
+.galaxy-bg {
+  background-color: #07061a;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(124, 58, 237, 0.28), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 45%, rgba(236, 72, 153, 0.16), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 30% 95%, rgba(34, 211, 238, 0.12), transparent 70%);
+  background-attachment: fixed;
+}
+
+/* Starfield: two fixed layers of tiny dots that twinkle at different speeds */
+.stars,
+.stars-far {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 40px 60px, #fff, transparent),
+    radial-gradient(1px 1px at 120px 140px, #c4b5fd, transparent),
+    radial-gradient(1.5px 1.5px at 210px 40px, #fff, transparent),
+    radial-gradient(1px 1px at 280px 200px, #a5f3fc, transparent),
+    radial-gradient(1px 1px at 90px 250px, #fff, transparent);
+  background-size: 320px 300px;
+  animation: twinkle 5s ease-in-out infinite alternate;
+}
+
+.stars-far {
+  background-image:
+    radial-gradient(1px 1px at 70px 90px, #fff, transparent),
+    radial-gradient(1px 1px at 190px 180px, #f9a8d4, transparent),
+    radial-gradient(1px 1px at 330px 70px, #fff, transparent),
+    radial-gradient(1px 1px at 250px 310px, #c4b5fd, transparent);
+  background-size: 420px 380px;
+  animation: twinkle 8s ease-in-out 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+
+/* Hero: planet with two orbiting rings (the one big animated moment) */
+.planet {
+  background: radial-gradient(circle at 30% 28%, #f0abfc 0%, #a855f7 35%, #4c1d95 70%, #1e1b4b 100%);
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.55), inset -18px -18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.orbit {
+  animation: orbit-spin 18s linear infinite;
+}
+
+.orbit-slow {
+  animation: orbit-spin 32s linear infinite reverse;
+}
+
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Gentle float for the planet */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* Hero text fades in once on page load */
+.rise {
+  animation: rise 0.9s ease-out both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+label:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .stars, .stars-far, .orbit, .orbit-slow, .float, .rise {
+    animation: none;
+  }
+}
+  </style>
+</head>
+
+<body class="galaxy-bg font-body text-slate-200 antialiased">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="stars-far" aria-hidden="true"></div>
+
+  <!-- NAVBAR: flex row, sticky so it stays visible while scrolling -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-space/70 backdrop-blur">
+    <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-4" aria-label="Main">
+      <a href="#about" class="font-display text-lg font-bold text-white">SP</a>
+
+      <!-- CSS-only hamburger: the hidden checkbox is the "peer" that the menu reacts to -->
+      <input id="menu" type="checkbox" class="peer sr-only" />
+      <label for="menu" class="cursor-pointer rounded-lg border border-white/20 px-3 py-1.5 text-sm md:hidden peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-ion">Menu</label>
+
+      <ul class="absolute inset-x-0 top-full hidden flex-col gap-1 border-b border-white/10 bg-space/95 px-6 py-4 peer-checked:flex md:static md:flex md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0">
+        <li><a class="block py-2 transition-colors hover:text-ion" href="#about">About</a></li>
+        <li><a class="block py-2 transition-colors hover:text-ion" href="#skills">Skills</a></li>
+        <li><a class="block py-2 transition-colors hover:text-ion" href="#projects">Projects</a></li>
+        <li><a class="block py-2 transition-colors hover:text-ion" href="#journey">Journey</a></li>
+        <li><a class="block rounded-full bg-nebula px-5 py-2 font-semibold text-space transition-transform duration-300 hover:-translate-y-0.5 md:inline-block" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO: grid splits text and planet into two columns on large screens -->
+    <section id="hero" class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:py-32">
+      <div class="rise">
+        <p class="mb-4 text-lg text-ion">Hi, I'm Shreyas Potlacheruvu</p>
+        <h1 class="font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
+          I build clean, responsive websites.
+        </h1>
+        <p class="mt-6 max-w-md text-lg leading-relaxed text-slate-300">
+          I'm a web development student learning HTML, CSS and Tailwind by making real projects, one page at a time.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a href="#projects" class="rounded-full bg-gradient-to-r from-nebula to-pulsar px-7 py-3 font-semibold text-space transition-transform duration-300 hover:-translate-y-1">View my work</a>
+          <a href="https://github.com/PotlacheruvuShreyas" target="_blank" rel="noopener" class="rounded-full border border-white/30 px-7 py-3 font-semibold text-white transition-colors duration-300 hover:border-ion hover:text-ion">GitHub</a>
+        </div>
+      </div>
+
+      <!-- Planet + rings: children are absolutely positioned inside a relative box -->
+      <div class="relative mx-auto h-72 w-72 sm:h-96 sm:w-96" aria-hidden="true">
+        <div class="float absolute inset-1/4 rounded-full planet"></div>
+        <div class="orbit absolute inset-0 rounded-full border border-nebula/40">
+          <span class="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ion shadow-[0_0_14px_#22d3ee]"></span>
+        </div>
+        <div class="orbit-slow absolute -inset-6 rounded-full border border-pulsar/30">
+          <span class="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-pulsar shadow-[0_0_12px_#f472b6]"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="mx-auto max-w-6xl px-6 py-20">
+      <h2 class="font-display text-3xl font-bold text-white">About me</h2>
+      <div class="mt-8 grid gap-8 md:grid-cols-3">
+        <p class="text-lg leading-relaxed md:col-span-2">
+          I'm a student at Scaler School of Technology who enjoys turning ideas into pages people can actually use. I learn best by building, breaking things and fixing them, and this portfolio is my latest experiment.
+        </p>
+        <div class="rounded-2xl border border-white/10 bg-panel/80 p-6">
+          <p class="font-semibold text-white">Right now I'm</p>
+          <p class="mt-2 text-slate-300">Practising Flexbox and Grid, and getting comfortable with Tailwind CSS.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS: 1 column on mobile, 2 on sm, 4 on lg -->
+    <section id="skills" class="mx-auto max-w-6xl px-6 py-20">
+      <h2 class="font-display text-3xl font-bold text-white">Skills</h2>
+      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl border border-white/10 bg-panel/80 p-6 transition-transform duration-300 hover:-translate-y-2 hover:border-nebula">
+          <h3 class="text-xl font-semibold text-nebula">Java</h3>
+          <p class="mt-2 text-slate-300">Object-oriented programming</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-panel/80 p-6 transition-transform duration-300 hover:-translate-y-2 hover:border-ion">
+          <h3 class="text-xl font-semibold text-ion">HTML</h3>
+          <p class="mt-2 text-slate-300">Structure and semantic markup</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-panel/80 p-6 transition-transform duration-300 hover:-translate-y-2 hover:border-pulsar">
+          <h3 class="text-xl font-semibold text-pulsar">CSS</h3>
+          <p class="mt-2 text-slate-300">Layout, styling and animation</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-panel/80 p-6 transition-transform duration-300 hover:-translate-y-2 hover:border-nebula">
+          <h3 class="text-xl font-semibold text-nebula">Python</h3>
+          <p class="mt-2 text-slate-300">Scripting and problem solving</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS: grid-cols-1 → md:2 → lg:3 -->
+    <section id="projects" class="mx-auto max-w-6xl px-6 py-20">
+      <h2 class="font-display text-3xl font-bold text-white">Projects</h2>
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+        <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-panel/80 transition-transform duration-300 hover:-translate-y-2">
+          <div class="flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 to-fuchsia-900">
+            <div class="h-16 w-16 rounded-full bg-gradient-to-br from-ion to-nebula transition-transform duration-500 group-hover:scale-125"></div>
+          </div>
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="text-xl font-semibold text-white">Student Profile</h3>
+            <p class="mt-2 flex-1 text-slate-300">This is Student Portal, where you can see my profile, my skills and my weekly Schedule with Course registration.  </p>
+            <p class="mt-4 text-sm text-nebula">HTML & CSS.</p>
+            <div class="mt-5 flex gap-3">
+              <a href="https://potlacheruvushreyas.github.io/Student-Profile./" target="_blank" rel="noopener" class="rounded-full bg-nebula px-4 py-2 text-sm font-semibold text-space">Live demo</a>
+              <a href="https://github.com/PotlacheruvuShreyas/Student-Profile." target="_blank" rel="noopener" class="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold hover:border-ion hover:text-ion">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-panel/80 transition-transform duration-300 hover:-translate-y-2">
+          <div class="flex h-40 items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-cyan-900 to-indigo-900">
+            <div class="h-10 w-10 rounded-lg bg-pulsar transition-transform duration-300 group-hover:translate-x-3"></div>
+            <div class="h-10 w-10 rounded-lg bg-ion transition-transform duration-300 group-hover:-translate-y-3"></div>
+            <div class="h-10 w-10 rounded-lg bg-nebula transition-transform duration-300 group-hover:translate-x-3"></div>
+          </div>
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="text-xl font-semibold text-white">Dragon-Dual Game</h3>
+            <p class="mt-2 flex-1 text-slate-300">Destory the Worlds, Claim the Stars, Get stronger with every World passed, Defeat the Dragon, Become Invincible.</p>
+            <p class="mt-4 text-sm text-nebula">HTML & CSS.</p>
+            <div class="mt-5 flex gap-3">
+              <a href="https://potlacheruvushreyas.github.io/Dragon-Dual./" target="_blank" rel="noopener" class="rounded-full bg-nebula px-4 py-2 text-sm font-semibold text-space">Live demo</a>
+              <a href="https://github.com/PotlacheruvuShreyas/Dragon-Dual." target="_blank" rel="noopener" class="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold hover:border-ion hover:text-ion">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- JOURNEY: a real sequence over time, so a timeline fits -->
+    <section id="journey" class="mx-auto max-w-6xl px-6 py-20">
+      <h2 class="font-display text-3xl font-bold text-white">Education and Journey</h2>
+      <ol class="mt-8 max-w-2xl space-y-8 border-l border-nebula/40 pl-6">
+        <li class="relative">
+          <span class="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full bg-ion shadow-[0_0_10px_#22d3ee]"></span>
+          <h3 class="font-semibold text-white">Scaler School of Technology</h3>
+          <p class="text-sm text-nebula">Currently studying</p>
+          <p class="mt-1 text-slate-300">Learning software development and building projects alongside my coursework.</p>
+        </li>
+        <li class="relative">
+          <span class="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full bg-pulsar shadow-[0_0_10px_#f472b6]"></span>
+          <h3 class="font-semibold text-white">Web Development course</h3>
+          <p class="text-sm text-nebula">In progress</p>
+          <p class="mt-1 text-slate-300">Learning HTML, CSS, Flexbox, Grid, responsive design and Tailwind by building projects.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- CONTACT: frontend-only form, opens the visitor's email app -->
+    <section id="contact" class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid gap-10 rounded-3xl border border-white/10 bg-panel/80 p-8 md:grid-cols-2 md:p-12">
+        <div>
+          <h2 class="font-display text-3xl font-bold text-white">Let's build something together</h2>
+          <p class="mt-4 text-slate-300">Have a project, an internship or just a question? Send a message and I'll reply soon.</p>
+          <ul class="mt-6 space-y-2">
+            <li><a class="transition-colors hover:text-ion" href="mailto:potlacheruvushreyas@gmail.com">potlacheruvushreyas@gmail.com</a></li>
+            <li><a class="transition-colors hover:text-ion" href="https://github.com/PotlacheruvuShreyas" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a class="transition-colors hover:text-ion" href="https://www.linkedin.com/in/shreyas-potlacheruvu-58a104420" target="_blank" rel="noopener">LinkedIn</a></li>
+          </ul>
+        </div>
+
+        <form action="mailto:potlacheruvushreyas@gmail.com" method="post" enctype="text/plain" class="flex flex-col gap-4">
+          <label class="flex flex-col gap-1 text-sm">Name
+            <input type="text" name="name" required class="rounded-lg border border-white/20 bg-space/70 px-4 py-3 text-base text-white" />
+          </label>
+          <label class="flex flex-col gap-1 text-sm">Email
+            <input type="email" name="email" required class="rounded-lg border border-white/20 bg-space/70 px-4 py-3 text-base text-white" />
+          </label>
+          <label class="flex flex-col gap-1 text-sm">Message
+            <textarea name="message" rows="4" required class="rounded-lg border border-white/20 bg-space/70 px-4 py-3 text-base text-white"></textarea>
+          </label>
+          <button type="submit" class="rounded-full bg-gradient-to-r from-nebula to-pulsar px-7 py-3 font-semibold text-space transition-transform duration-300 hover:-translate-y-1">Send message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 px-6 py-8">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-slate-400 md:flex-row">
+      <p>&copy; 2026 Shreyas Potlacheruvu. Built with HTML, CSS and Tailwind.</p>
+      <ul class="flex gap-6">
+        <li><a class="transition-colors hover:text-ion" href="https://github.com/PotlacheruvuShreyas" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a class="transition-colors hover:text-ion" href="https://www.linkedin.com/in/shreyas-potlacheruvu-58a104420" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a class="transition-colors hover:text-ion" href="mailto:potlacheruvushreyas@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>
